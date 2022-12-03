@@ -1,16 +1,21 @@
 # Payroll Management System (Python)
 
-This is a attempt of me, to create a basic payroll management system in Python and MySQL
+This is a attempt of me, to create a basic payroll management system using Python and MySQL
 
 A User can add,view,delete,modify records and can view the payroll of a employee/employees
 
 ## Prerequisites
 ### You need to have the following modules installed on your system
 * tabulate
-* mysql-connecter-python
+* mysql-connector-python
+* pandas
 
-### Change the password in the code, to yours which you have in your MySQL Server
+#### to install a module (to be run in your terminal/cmd/shell)
+```
+pip install {module_name}
+```
 
-#### to install a module : pip install {module_name} (in your cmd/terminal)
+### Remember: Change the password in the code, to yours which you have in your MySQL Server
 
-**Note: I may add a Export to CSV in the future**
+## Notes:
+3/12/22 - Added Export as CSV (Payroll)
