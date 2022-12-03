@@ -1,6 +1,7 @@
 import mysql.connector
 import datetime
 from tabulate import tabulate
+import pandas as pd
 
 db=input("Enter name of your database:  ")
 
@@ -34,8 +35,8 @@ while True:
     print("\t\t\t\t4. For Deleting Records of All the Employees")
     print("\t\t\t\t5. For Deleting a Record of a Particular Employee")
     print("\t\t\t\t6. For Modification in a Record")
-    print("\t\t\t\t7. For Displaying Payroll for a Particular Employee")
-    print("\t\t\t\t8. For Displaying Payroll for All the Employees")
+    print("\t\t\t\t7. For Displaying/Generating Payroll for a Particular Employee")
+    print("\t\t\t\t8. For Displaying/Generating Payroll for All the Employees")
     print("\t\t\t\t9. Exit the Program")
 
     choice=int(input('Enter choice: '))
@@ -91,16 +92,22 @@ while True:
 
     elif choice == 3:
         mycursor.execute(f"select empno,name,job,basicsalary from {tablename}")
-        print(tabulate(mycursor,headers=['Empno','Name','Job''Basic Salary'],tablefmt='fancy_grid'))
+        print(tabulate(mycursor,headers=['Empno','Name','Job','Basic Salary'],tablefmt='fancy_grid'))
         input("Press Enter to Continue......")
 
     elif choice == 4:
-        print("Warning! All your Records are about to be deleted")
-        a=input("Continue with the deletion (Y/N)")
-        if a.upper == 'YES' or a.upper == 'Y':
+        try:
+            print("Warning! All your Records are about to be deleted")
+            a=input("Continue with the deletion (Y/N): ")
+            if a.upper() == 'YES' or a.upper() == 'Y':
 
-            mycursor.excecute(f"delete from {tablename}")
-            print("All Records are Deleted")
+                mycursor.execute(f"delete from {tablename}")
+                print()
+                print("All Records are Deleted")
+                print()
+            input("Press Enter to Continue..........")
+        except Exception as e:
+            print(e)
 
     elif choice == 5:
         try:
@@ -118,7 +125,7 @@ while True:
 
     elif choice == 6:
         try:
-            en=input('Enter employee no. of the record to be modified....')
+            en=input('Enter employee no. of the record to be modified.... ')
             query=f'select * from {tablename} where empno={en}'
             mycursor.execute(query)
             c=mycursor.rowcount
@@ -130,7 +137,7 @@ while True:
                 mname=myrecord[1]
                 mjob=myrecord[2]
                 mbasic=myrecord[3]
-                print(mname,mjob,mbasic)
+
                 print(f'empno  : {myrecord[0]}')
                 print(f'name  : {myrecord[1]}')
                 print(f'job  : {myrecord[2]}')
@@ -156,6 +163,8 @@ while True:
             
 
                 mycursor.execute(query)
+
+                print("All Done! ")
         except Exception as e:
             print(e)
 
@@ -169,42 +178,69 @@ while True:
             en=int(input("Enter Employee No. of the Record:  "))
             mycursor.execute(f'select * from {tablename} where empno={en}')
             myrecords=mycursor.fetchall()
-            print()
-            print('*'*95)
-            print()
-            #print()
-            print('" Employee Payroll "'.center(90))
-            print()
-            print('*'*95)
-            now=datetime.datetime.now()
-            hello=now.strftime("%Y-%m-%d %H:%M: %S")
-            print()
-            print(f"Current Date and Time: {hello}")
-            print()
+            choice = int(
+                input("Would you like to View/Generate Payroll (1 for View, 2 for Generate): "))
+            
+            if choice == 1:
+                print()
+                print('*'*95)
+                print()
+                #print()
+                print('" Employee Payroll "'.center(90))
+                print()
+                print('*'*95)
+                now=datetime.datetime.now()
+                hello=now.strftime("%Y-%m-%d %H:%M: %S")
+                print()
+                print(f"Current Date and Time: {hello}")
+                print()
 
-            print(tabulate(myrecords,headers=['Empno','Name','Basic Salary','DA','HRA','Gross Salary','Tax','Net Salary'],tablefmt='fancy_grid'))
+                print(tabulate(myrecords,headers=['Empno','Name','Basic Salary','DA','HRA','Gross Salary','Tax','Net Salary'],tablefmt='fancy_grid'))
+
+            elif choice == 2:
+                df = pd.DataFrame(myrecords)
+                print(df)
+                choice2 = input(
+                    "Enter your desired locations for the file to be saved: ")
+                df.to_csv(f"{choice2}/payroll_emp_{en}.csv", header=[
+                          'Empno', 'Name', 'Job', 'Basic Salary', 'DA', 'HRA', 'Gross Salary', 'Tax', 'Net Salary'], index=False)
+                print(f"File Saved At {choice2}")
+
+
 
             input("Press Enter to Continue....")
         except Exception as e:
             print(e)
 
     elif choice == 8:
+        
         try:
             mycursor.execute(f'select * from {tablename}')
             myrecords=mycursor.fetchall()
             
-            print('*'*95)
-            print()
-            print('Employee Payroll'.center(90))
-            print()
-            print('*'*95)
-            print()
-            now=datetime.datetime.now()
-            hello=now.strftime("%Y-%m-%d %H:%M: %S")
-            print(f"Current Date and Time: {hello}")
-            print()
-            
-            print(tabulate(myrecords,headers=['Empno','Name','Basic Salary','DA','HRA','Gross Salary','Tax','Net Salary'],tablefmt='fancy_grid'))
+            choice=int(input("Would you like to View/Generate (1 for View, 2 for Generate): "))
+            if choice==1:
+                print('*'*95)
+                print()
+                print('Employee Payroll'.center(90))
+                print()
+                print('*'*95)
+                print()
+                now=datetime.datetime.now()
+                hello=now.strftime("%Y-%m-%d %H:%M: %S")
+                print(f"Current Date and Time: {hello}")
+                print()
+                print(tabulate(myrecords,headers=['Empno','Name','Job','Basic Salary','DA','HRA','Gross Salary','Tax','Net Salary'],tablefmt='fancy_grid'))
+
+            elif choice==2:
+                df=pd.DataFrame(myrecords)
+                print(df)
+                choice2=input("Enter your desired locations for the file to be saved: ")
+                df.to_csv(f"{choice2}/payroll_all.csv", header=[
+                          'Empno', 'Name', 'Job','Basic Salary', 'DA', 'HRA', 'Gross Salary', 'Tax', 'Net Salary'], index=False)
+                print(f"File Saved At {choice2}")
+                
+           
 
             
 
