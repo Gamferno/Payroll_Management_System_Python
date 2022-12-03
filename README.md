@@ -2,7 +2,7 @@
 
 This is a attempt of me, to create a basic payroll management system using Python and MySQL
 
-A User can add,view,delete,modify records and can view the payroll of a employee/employees
+A User can add,view,delete,modify records and can view as well as generate the payroll of a employee/employees
 
 ## Prerequisites
 ### You need to have the following modules installed on your system
