@@ -13,4 +13,4 @@ A User can add,view,delete,modify records and can view the payroll of a employee
 
 #### to install a module : pip install {module_name} (in your cmd/terminal)
 
-**Note: I may add a Export to CSV in the future
+**Note: I may add a Export to CSV in the future**
