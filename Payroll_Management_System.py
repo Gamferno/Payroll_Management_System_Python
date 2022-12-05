@@ -5,7 +5,7 @@ import pandas as pd
 
 db=input("Enter name of your database:  ")
 
-mydb=mysql.connector.connect(host='localhost',user='root',passwd='amoiamoi',auth_plugin='mysql_native_password')
+mydb=mysql.connector.connect(host='localhost',user='root',passwd=your_password,auth_plugin='mysql_native_password')
 mycursor=mydb.cursor()
 
 
